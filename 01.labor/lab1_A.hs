@@ -1,3 +1,5 @@
+import Control.DeepSeq (NFData)
+import System.Posix.Internals (lstat)
 
 osszeg :: Int -> Int -> Int
 osszeg a b = a + b
@@ -37,3 +39,78 @@ max1 a b
 min_ a b
   | a < b = a
   | otherwise = b
+
+elempar ep1 ep2 = (a == c && b == d) || (a == d && b == c)
+  where
+    (a,b)=ep1
+    (c,d)=ep2
+
+elempar2 (a,b) (c,d) = (a == c && b == d) || (a == d && b == c)
+
+main = do 
+  putStr "elempar (6,7) (7,6): "
+  print (elempar (6,7) (7,6))
+  putStrLn("elempar (6,7) (4,7): " ++ show(elempar2 (6,7) (4,7)))
+
+fakt1 0 = 1
+fakt1 n = n * fakt1(n-1)
+
+fakt2 n
+  | n < 0 = error "neg. szam" 
+  | n == 0 = 1
+  | n == 1 = 1
+  | otherwise = n * fakt2(n-1)
+fakt3 n res
+  | n < 0 = error "neg. szam"
+  | n == 0 = res
+  | otherwise = fakt3 (n - 1) (res * n)
+
+hatvanyX x n
+  | n < 0 = error "neg. kitevo"
+  | otherwise = x ** n
+
+hatvanyX2 x n
+  | n < 0 = error "neg. kitevo"
+  | otherwise = x ^ n
+
+negyzetgyok n = [sqrt i | i <- [1..n]]
+
+negyzetszam n = [i^2 | i <- [1..n]]
+
+kobszam n = [i^3 | i<-[1..n]]
+nemNegyzet n = [i | i<-[1..n], i/=(sqrt i^2)]
+parosOsztok x = [i | i <- [1..x], mod x i == 0, even i]
+parosOsztok2 x = [i | i<-[1..x], mod x i ==0, even i]
+
+osztok x = [i | i <-[1..x],mod x i == 0]
+
+primszam x = osztok x == [1,x]
+
+primszamN n = [i | i<-[1..n],primszam i]
+
+primszamN2 n = [i | i<-[1..n],primszamL i]
+  where
+      primszamL sn = [1,sn] == osztokL sn
+      osztokL sn2 = [j | j<-[1..sn2],mod sn2 j == 0]
+
+osszetett n = [i | i<-[1..n],primszam i == False]
+
+osszetett2 n = [i | i<-[1..n],not(primszam i)]
+
+paratlanOsszetett n = [i | i<-[1..n],not(primszam i),mod i 2/=0]
+paratlanOsszetett2 n = [i | i<-[1..n],not(primszam i),not(even i)]
+paratlanOsszetett3 n = [i | i<-[1..n],not(primszam i),odd i]
+pitagorasz n = [(a,b,c) | c<-[1..n],b<-[1..c],a<-[1..b],a^2+b^2==c^2]
+
+betuSzam = zip['a'..'z'][0..25]
+betuSzam2 = zip['a'..'z'][0..]
+
+szamok = zip[0..5][5,4..0]
+szamok2 n = zip[0..n][n,n-1..0]
+szamok3 n = [(i,n-i) | i<-[0..n]]
+
+tf n = take n ls
+  where
+    ls = [True,False] ++ ls
+
+tf2 n = [mod i 2 == 0 | i<-[0..n]]
